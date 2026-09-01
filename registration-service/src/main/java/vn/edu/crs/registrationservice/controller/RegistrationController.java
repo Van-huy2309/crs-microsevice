@@ -1,22 +1,28 @@
 package vn.edu.crs.registrationservice.controller;
 
+import vn.edu.crs.registrationservice.entity.Registration;
 import vn.edu.crs.registrationservice.dto.RegistrationRequestDTO;
 import vn.edu.crs.registrationservice.service.RegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// path: registration-service/src/main/java/vn/edu/crs/registrationservice/controller/RegistrationController.java
-// purpose: controller cho dang ky/huy dang ky hoc phan
 @RestController
 @RequestMapping("/registrations")
 @RequiredArgsConstructor
 public class RegistrationController {
 
     private final RegistrationService registrationService;
+
+    @GetMapping("/my")
+    public List<Registration> getMyRegistrations(Authentication authentication) {
+        Long studentId = (Long) authentication.getCredentials();
+        return registrationService.getMyRegistrations(studentId);
+    }
 
     // GET /registrations — lay tat ca (tien ich cho viec kiem tra)
     @GetMapping

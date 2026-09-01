@@ -25,7 +25,7 @@ public class Registration {
 
     // Ma sinh vien (chi luu ID, khong join vi day la microservice rieng)
     @Column(nullable = false)
-    private String studentId;
+    private Long studentId;
 
     // ID mon hoc ben course-service (khong co FK that su vi khac DB)
     @Column(nullable = false)

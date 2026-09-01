@@ -10,9 +10,9 @@ import java.util.List;
 public interface RegistrationRepository extends JpaRepository<Registration, Long> {
 
     // Tim tat ca dang ky cua mot sinh vien
-    List<Registration> findByStudentId(String studentId);
+    List<Registration> findByStudentId(Long studentId);
 
     // Kiem tra sinh vien da dang ky mon nay chua, bo qua ban ghi da huy
     boolean existsByStudentIdAndCourseIdAndTrangThaiNot(
-            String studentId, Long courseId, String trangThai);
+            Long studentId, Long courseId, String trangThai);
 }

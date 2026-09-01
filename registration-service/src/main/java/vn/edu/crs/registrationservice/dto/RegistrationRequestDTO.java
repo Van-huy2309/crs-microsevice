@@ -1,6 +1,5 @@
 package vn.edu.crs.registrationservice.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +15,8 @@ public class RegistrationRequestDTO {
 
     private Long id;
 
-    @NotBlank(message = "studentId khong duoc de trong")
-    private String studentId;
+    @NotNull(message = "studentId khong duoc de trong")
+    private Long studentId;
 
     @NotNull(message = "courseId khong duoc de trong")
     private Long courseId;

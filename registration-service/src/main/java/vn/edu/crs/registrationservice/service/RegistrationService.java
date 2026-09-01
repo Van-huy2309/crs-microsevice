@@ -20,6 +20,10 @@ public class RegistrationService {
     private final RegistrationRepository registrationRepository;
     private final CourseClient courseClient;
 
+    public List<Registration> getMyRegistrations(Long studentId) {
+        return registrationRepository.findByStudentId(studentId);
+    }
+
     // Lay tat ca dang ky
     public List<RegistrationRequestDTO> getAll() {
         return registrationRepository.findAll()
@@ -51,8 +55,7 @@ public class RegistrationService {
         boolean existed = registrationRepository.existsByStudentIdAndCourseIdAndTrangThaiNot(
                 dto.getStudentId(), dto.getCourseId(), Registration.DA_HUY);
         if (existed) {
-            throw new IllegalStateException(
-                    "Sinh vien " + dto.getStudentId() + " da dang ky mon hoc nay roi");
+            throw new IllegalStateException("Sinh vien da dang ky mon hoc nay roi");
         }
 
         // Buoc 2: Goi sang course-service de tru cho TRUOC.

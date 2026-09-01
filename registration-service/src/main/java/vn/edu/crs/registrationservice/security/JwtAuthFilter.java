@@ -35,10 +35,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             try {
-                // Tạo SecretKey từ chuỗi secret
                 SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
 
-                // Cú pháp mới cho JJWT 0.12.+
                 Claims claims = Jwts.parser()
                         .verifyWith(key)
                         .build()
@@ -47,18 +45,34 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 String username = claims.getSubject();
                 String role = claims.get("role", String.class);
+                Long userId = extractUserId(claims);
 
                 var authToken = new UsernamePasswordAuthenticationToken(
-                        username, null, List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                        username, userId, List.of(new SimpleGrantedAuthority("ROLE_" + role))
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
 
             } catch (Exception e) {
                 SecurityContextHolder.clearContext();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"message\":\"Token khong hop le hoac het han\"}");
+                return;
             }
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private Long extractUserId(Claims claims) {
+        Object raw = claims.get("userId");
+        if (raw instanceof Number number) {
+            return number.longValue();
+        }
+        if (raw instanceof String value && !value.isBlank()) {
+            return Long.parseLong(value);
+        }
+        return null;
     }
 }
