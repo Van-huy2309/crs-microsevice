@@ -56,6 +56,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             } catch (Exception e) {
                 SecurityContextHolder.clearContext();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"message\":\"Token khong hop le hoac het han\"}");
+                return;
             }
         }
 
