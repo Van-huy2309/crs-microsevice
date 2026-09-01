@@ -5,6 +5,7 @@ package vn.edu.crs.authservice.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -24,6 +25,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleInvalidCredentials(
             InvalidCredentialsException ex, WebRequest request) {
         return buildResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<Map<String, Object>> handleMethodNotSupported(
+            HttpRequestMethodNotSupportedException ex, WebRequest request) {
+        return buildResponse(HttpStatus.METHOD_NOT_ALLOWED, "Phuong thuc khong duoc ho tro", request);
     }
 
     // bat moi exception con lai chua duoc xu ly rieng, tranh loi 500 lo stack trace

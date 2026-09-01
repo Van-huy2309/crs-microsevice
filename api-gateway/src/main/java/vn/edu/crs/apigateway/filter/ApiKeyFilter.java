@@ -21,12 +21,12 @@ public class ApiKeyFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
 
-        if (!path.startsWith("/api/public/courses")) {
+        if (!path.contains("/api/public/courses")) {
             return chain.filter(exchange);
         }
 
         String apiKey = request.getHeaders().getFirst("X-API-KEY");
-        if (apiKey == null || !apiKey.equals(validApiKey)) {
+        if (apiKey == null || apiKey.isBlank() || !apiKey.equals(validApiKey)) {
             exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
             return exchange.getResponse().setComplete();
         }
@@ -36,6 +36,6 @@ public class ApiKeyFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return -2; // chay truoc AuthHeaderFilter cho chinh route nay
+        return Ordered.HIGHEST_PRECEDENCE;
     }
 }
